@@ -1,0 +1,23 @@
+#!/bin/bash
+
+name=siqbase
+date=$(date +'%Y.%m.%d')
+
+podman pull alpine:latest
+podman pull ubuntu:20.04
+podman pull debian:bullseye
+podman pull openeuler/openeuler:22.03-lts
+podman pull centos:centos7
+
+for d in openeuler centos debian ubuntu
+do
+	cd $d
+	echo "====> $d"
+	podman build --security-opt seccomp=unconfined --squash-all --rm --no-cache \
+		--logfile=../$d.log -t docker.io/lanfanb/$name:$d.$date .
+	podman tag docker.io/lanfanb/$name:$d.$date docker.io/lanfanb/$name:$d.latest
+	podman push --authfile=/root/auth.json docker.io/lanfanb/$name:$d.$date
+	podman push --authfile=/root/auth.json docker.io/lanfanb/$name:$d.latest
+	cd ..
+done
+

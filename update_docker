@@ -1,0 +1,7 @@
+#!/bin/bash
+
+docker pull nextcloud:apache
+docker pull redis:alpine
+docker pull postgres:14-alpine
+docker pull vaultwarden/server:latest
+
