@@ -1,0 +1,36 @@
+name: build
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: More disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          df -h
+
+      - name: Restart docker daemon with experimental feature
+        run: |
+          tmp=$(mktemp)
+          sudo jq '.+{experimental:true}' /etc/docker/daemon.json > "$tmp"
+          sudo mv "$tmp" /etc/docker/daemon.json
+          sudo systemctl restart docker.service
+
+      - name: Build and push images
+        run: |
+          docker login --username=${{ secrets.DOCKER_USERNAME }} --password "${{ secrets.DOCKER_PASSWORD }}"
+          TZ="Asia/Shanghai"
+          tag=$(date +'%Y.%m.%d')
+          for app in kicad riscv chipyard
+          do
+            docker build --rm --no-cache --squash -t lanfanb/siqbase:$app.$tag -f $app.Dockerfile .
+            docker tag lanfanb/siqbase:$app.$tag lanfanb/siqbase:$app.latest
+            docker push lanfanb/siqbase:$app.$tag
+            docker push lanfanb/siqbase:$app.latest
+          done
