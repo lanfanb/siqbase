@@ -8,16 +8,25 @@ apk update ; \
 apk add --no-cache build-base python3-dev openjdk11 git sbt dtc zlib-dev \
 bash autoconf automake libtool m4 curl grep gawk gperf bison flex-dev \
 expat-dev texinfo patchutils bc ncurses-dev mpc1-dev mpfr-dev gmp-dev \
-isl-dev readline-dev babeltrace-dev ; \
+isl-dev readline-dev babeltrace-dev boost ninja pixman-dev cmake eudev-dev ; \
 ln -sf python3 /usr/bin/python ; \
-cd && git clone --depth 1 --branch 2022.06.03 https://github.com/riscv-collab/riscv-gnu-toolchain.git ; \
+export RISCV=/opt/riscv/2022.06.03 ; \
+cd && git clone --depth 1 --branch 2022.06.03 https://github.com/lanfanb/riscv-gnu-toolchain.git ; \
 cd && cd riscv-gnu-toolchain && git submodule update --init --recursive --depth 1 ; \
 cd && cd riscv-gnu-toolchain && mkdir build && cd build ; \
-../configure --prefix=/opt/riscv/2022.06.03 --enable-multilib && make -j2 && cd .. && rm -rf build ; \
+../configure --prefix=$RISCV --enable-multilib && make -j2 && cd .. && rm -rf build ; \
 cd && cd riscv-gnu-toolchain && mkdir build && cd build ; \
-../configure --prefix=/opt/riscv/2022.06.03 && make musl -j2 && cd .. && rm -rf build ; \
+../configure --prefix=$RISCV && make musl -j2 && cd .. && rm -rf build ; \
 cd && cd riscv-gnu-toolchain && mkdir build && cd build ; \
-../configure --prefix=/opt/riscv/2022.06.03/glibc --enable-multilib && make linux -j2 && cd .. && rm -rf build ; \
+../configure --prefix=$RISCV/glibc --enable-multilib && make linux -j2 && cd .. && rm -rf build ; \
+cd && cd riscv-gnu-toolchain/spike && mkdir build && cd build ; \
+../configure --prefix=$RISCV && make -j2 && make install ; \
+cd && cd riscv-gnu-toolchain/qemu && mkdir build && cd build ; \
+../configure --prefix=$RISCV --target-list=riscv64-softmmu --disable-werror && make -j2 && make install ; \
 cd && rm -rf riscv-gnu-toolchain ; \
+cd && git clone --depth 1 --branch v4.220 https://github.com/verilator/verilator ; \
+cd verilator && autoconf && ./configure --prefix=/opt/verilator/4.220 ; \
+make -j2 && make install ; \
+cd && rm -rf verilator ; \
 cd
 CMD ["/bin/sh"]

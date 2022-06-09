@@ -27,7 +27,7 @@ jobs:
           docker login --username=${{ secrets.DOCKER_USERNAME }} --password "${{ secrets.DOCKER_PASSWORD }}"
           TZ="Asia/Shanghai"
           tag=$(date +'%Y.%m.%d')
-          for app in kicad riscv chipyard
+          for app in riscv chipyard
           do
             docker build --rm --no-cache --squash -t lanfanb/siqbase:$app.$tag -f $app.Dockerfile .
             docker tag lanfanb/siqbase:$app.$tag lanfanb/siqbase:$app.latest
