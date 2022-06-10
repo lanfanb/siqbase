@@ -7,5 +7,6 @@ cd ~/chipyard && git submodule update --init --depth 1 ; \
 cd ~/chipyard/generators/rocket-chip && git submodule update --init --depth 1 ; \
 cd ~/chipyard/generators/ibex && git submodule update --init --depth 1 ; \
 cd ~/chipyard/sims/verilator && make CONFIG=IbexConfig ; \
+tar -czf ~/ibex.tar.gz generated-src ; \ 
 cd
 CMD ["/bin/sh"]

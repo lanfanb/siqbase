@@ -27,10 +27,28 @@ jobs:
           docker login --username=${{ secrets.DOCKER_USERNAME }} --password "${{ secrets.DOCKER_PASSWORD }}"
           TZ="Asia/Shanghai"
           tag=$(date +'%Y.%m.%d')
-          for app in riscv chipyard
+          #for app in
+          #do
+          #  docker build --rm --no-cache --squash -t lanfanb/siqbase:$app.$tag -f $app.Dockerfile .
+          #  docker tag lanfanb/siqbase:$app.$tag lanfanb/siqbase:$app.latest
+          #  docker push lanfanb/siqbase:$app.$tag
+          #  docker push lanfanb/siqbase:$app.latest
+          #done
+
+      - name: Build
+        run: |
+          TZ="Asia/Shanghai"
+          tag=$(date +'%Y.%m.%d')
+          for app in chipyard
           do
-            docker build --rm --no-cache --squash -t lanfanb/siqbase:$app.$tag -f $app.Dockerfile .
-            docker tag lanfanb/siqbase:$app.$tag lanfanb/siqbase:$app.latest
-            docker push lanfanb/siqbase:$app.$tag
-            docker push lanfanb/siqbase:$app.latest
+            docker build --rm --no-cache --squash -t lanfanb/siqbase:$app -f $app.Dockerfile .
+            docker run --name $app -d lanfanb/siqbase:$app
+            docker cp $app:/root/ibex.tar.gz ibex.$tag.tar.gz
+            docker stop $app
           done
+
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: ibex
+          path: ibex*.tar.gz
