@@ -1,9 +1,13 @@
 name: build
 on: push
 
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -13,6 +17,9 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
+          export VERSION=3.10.0
+          wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce_${VERSION}-focal_amd64.deb
+          sudo dpkg -i singularity-ce_${VERSION}-focal_amd64.deb
           df -h
 
       - name: Restart docker daemon with experimental feature
@@ -22,33 +29,20 @@ jobs:
           sudo mv "$tmp" /etc/docker/daemon.json
           sudo systemctl restart docker.service
 
-      - name: Build and push images
-        run: |
-          docker login --username=${{ secrets.DOCKER_USERNAME }} --password "${{ secrets.DOCKER_PASSWORD }}"
-          TZ="Asia/Shanghai"
-          tag=$(date +'%Y.%m.%d')
-          #for app in
-          #do
-          #  docker build --rm --no-cache --squash -t lanfanb/siqbase:$app.$tag -f $app.Dockerfile .
-          #  docker tag lanfanb/siqbase:$app.$tag lanfanb/siqbase:$app.latest
-          #  docker push lanfanb/siqbase:$app.$tag
-          #  docker push lanfanb/siqbase:$app.latest
-          #done
-
       - name: Build
         run: |
           TZ="Asia/Shanghai"
           tag=$(date +'%Y.%m.%d')
-          for app in chipyard
+          for app in test
           do
-            docker build --rm --no-cache --squash -t lanfanb/siqbase:$app -f $app.Dockerfile .
-            docker run --name $app -d lanfanb/siqbase:$app
-            docker cp $app:/root/ibex.tar.gz ibex.$tag.tar.gz
-            docker stop $app
+            docker build --rm --no-cache --squash -t lanfanb/$app:$tag -f $app.Dockerfile .
+            singularity build $app.$tag.sif docker-daemon://lanfanb/$app:$tag
+            tar -cJvf $app.$tag.sif.tar.xz $app.$tag.sif
           done
 
-      - name: Upload build
+      - name: Upload test
         uses: actions/upload-artifact@v3
         with:
-          name: ibex
-          path: ibex*.tar.gz
+          name: test
+          path: test.*.sif.tar.xz
+          
