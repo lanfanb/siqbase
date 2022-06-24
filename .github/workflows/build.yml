@@ -17,9 +17,6 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
-          export VERSION=3.10.0
-          wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce_${VERSION}-focal_amd64.deb
-          sudo dpkg -i singularity-ce_${VERSION}-focal_amd64.deb
           df -h
 
       - name: Restart docker daemon with experimental feature
@@ -29,20 +26,14 @@ jobs:
           sudo mv "$tmp" /etc/docker/daemon.json
           sudo systemctl restart docker.service
 
-      - name: Build
+      - name: Build and push images
         run: |
+          docker login --username=${{ secrets.DOCKER_USERNAME }} --password "${{ secrets.DOCKER_PASSWORD }}"
           TZ="Asia/Shanghai"
           tag=$(date +'%Y.%m.%d')
-          for app in test
+          for app in riscv
           do
-            docker build --rm --no-cache --squash -t lanfanb/$app:$tag -f $app.Dockerfile .
-            singularity build $app.$tag.sif docker-daemon://lanfanb/$app:$tag
-            tar -cJvf $app.$tag.sif.tar.xz $app.$tag.sif
+            docker build --rm --no-cache --squash -t lanfanb/siqbase:$app.$tag -f $app.Dockerfile .
+            docker push lanfanb/siqbase:$app.$tag
           done
 
-      - name: Upload test
-        uses: actions/upload-artifact@v3
-        with:
-          name: test
-          path: test.*.sif.tar.xz
-          
