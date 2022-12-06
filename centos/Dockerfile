@@ -24,7 +24,7 @@ boost169-python2-devel boost169-python3-devel boost169-mpich-devel boost169-mpic
 boost169-mpich-python3-devel python36-PyYAML mesa-libGLU-devel cairo-devel ninja-build libXt-devel \
 gsl-devel readline-devel libffi-devel openssl-devel libcurl-devel gperf zlib-static bzip2-devel \
 Judy-devel gtk3-devel maven dtc python2-scons python36-scons hdf5-devel protobuf-devel gperftools-devel \
-sbt java-11-openjdk ccache sqlite-devel gdbm-devel libdb libdb-* ; \
+sbt java-11-openjdk ccache sqlite-devel gdbm-devel libdb libdb-* help2man texinfo lpsolve-devel ; \
 alternatives --set java $(alternatives --list | grep java-11 | awk '{ print $3 }')/bin/java ; \
 yum clean all
 CMD ["/usr/sbin/init"]
