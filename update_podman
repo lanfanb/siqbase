@@ -3,11 +3,11 @@
 name=siqbase
 date=$(date +'%Y.%m.%d')
 
-podman pull alpine:latest
-podman pull ubuntu:20.04
-podman pull debian:bullseye
 podman pull openeuler/openeuler:22.03-lts
 podman pull centos:centos7
+podman pull debian:bullseye
+podman pull ubuntu:20.04
+podman pull alpine:latest
 
 for d in openeuler centos debian ubuntu
 do

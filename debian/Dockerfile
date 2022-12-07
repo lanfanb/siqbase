@@ -6,6 +6,6 @@ echo 'deb http://mirrors.tencentyun.com/debian bullseye-backports main contrib n
 echo 'deb http://mirrors.tencentyun.com/debian-security bullseye-security main contrib non-free' >> /etc/apt/sources.list ; \
 apt update ; \
 apt upgrade -y ; \
-apt install -y podman vim wget curl ; \
+apt install -y vim wget curl ; \
 apt clean
 CMD ["/usr/sbin/init"]
