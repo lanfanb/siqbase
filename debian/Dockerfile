@@ -11,6 +11,6 @@ cmake zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-
 libffi-dev curl libbz2-dev sqlite3 libsqlite3-dev liblzma-dev libgdbm-compat-dev \
 libdb-dev qt5-qmake qt*5-dev libqt5*-dev csh automake autoconf m4 libxt-dev gsl-bin \
 libgsl-dev bison flex libgtk-3-dev gperf maven device-tree-compiler help2man texinfo \
-liblpsolve55-dev ; \
+liblpsolve55-dev libboost-all-dev ; \
 apt clean
 CMD ["/usr/sbin/init"]
