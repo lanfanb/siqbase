@@ -12,7 +12,7 @@ libffi-dev curl libbz2-dev sqlite3 libsqlite3-dev liblzma-dev libgdbm-compat-dev
 libdb-dev qt5-qmake qt*5-dev libqt5*-dev csh automake autoconf m4 libxt-dev gsl-bin \
 libgsl-dev bison flex libgtk-3-dev gperf maven device-tree-compiler help2man texinfo \
 liblpsolve55-dev libboost-all-dev openjdk-11-jdk ruby ruby-dev swig ninja-build \
-rsync qt5-default ; \
+rsync qt5-default uuid-dev ; \
 ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime ; \
 dpkg-reconfigure -f noninteractive tzdata ; \
 update-alternatives --set java $(update-alternatives --list java | grep java-11) ; \
