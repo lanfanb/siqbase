@@ -1,5 +1,14 @@
 #!/bin/bash
 
+os=$1
+
+if [[ "$os" == "all" ]]
+then
+	os_list="openeuler centos debian ubuntu"
+else
+	os_list=$os
+fi
+
 name=siqbase
 date=$(date +'%Y.%m.%d')
 
@@ -9,7 +18,7 @@ podman pull debian:bullseye
 podman pull ubuntu:18.04
 podman pull alpine:latest
 
-for d in openeuler centos debian ubuntu
+for d in $os_list
 do
 	cd $d
 	echo "====> $d"
