@@ -23,6 +23,7 @@ boost148-static boost148-openmpi boost148-openmpi-devel boost148-openmpi-python 
 boost148-mpich-devel boost148-mpich-python mercurial mesa-libGLU-devel cairo-devel ninja-build \
 libXt-devel gsl-devel readline-devel libffi-devel openssl-devel libcurl-devel gperf zlib-static \
 bzip2-devel Judy-devel dtc hdf5-devel protobuf-devel gperftools-devel ccache help2man texinfo \
-lpsolve-devel gdbm-devel db4-* libuuid-devel zlib-devel ncurses-devel sqlite-devel sqlite2-devel ; \
+lpsolve-devel gdbm-devel db4-* libuuid-devel zlib-devel ncurses-devel sqlite-devel sqlite2-devel \
+python34 python34-devel python34-numpy ; \
 yum clean all
 CMD ["/usr/sbin/init"]
