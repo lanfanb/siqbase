@@ -16,7 +16,7 @@ sed -i "s/mirror.centos.org/mirrors.tencentyun.com/" /etc/yum.repos.d/CentOS-SCL
 yum makecache ; \
 yum upgrade -y ; \
 yum groupinstall -y Base "Development tools" "Scientific support" ; \
-yum install -y cmake cmake3 tcl-devel tk-devel qt5*-devel ruby ruby-devel eigen3-devel \
+yum install -y cmake cmake3 tcl-devel tk-devel qt5*-devel ruby ruby-devel eigen3-devel python-devel \
 devtoolset-9 boost boost-devel boost-static boost-openmpi boost-openmpi-devel boost-openmpi-python \
 boost-python boost-mpich boost-mpich-devel boost-mpich-python boost148 boost148-devel xz-devel  \
 boost148-static boost148-openmpi boost148-openmpi-devel boost148-openmpi-python libpcap-devel \
